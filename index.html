@@ -359,13 +359,13 @@
       <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <div class="fieldrow">
-        <div class="field"><label for="f-name">Name *</label><input id="f-name" type="text" name="name" required></div>
-        <div class="field"><label for="f-email">Email *</label><input id="f-email" type="email" name="email" required></div>
+        <div class="field"><label for="f-name">Full name *</label><input id="f-name" type="text" name="name" required></div>
+        <div class="field"><label for="f-email">Email address *</label><input id="f-email" type="email" name="email" required></div>
       </div>
 
       <div class="fieldrow">
-        <div class="field"><label for="f-phone">Phone</label><input id="f-phone" type="tel" name="phone"></div>
-        <div class="field"><label for="f-type">Enquiry type *</label>
+        <div class="field"><label for="f-phone">Phone number</label><input id="f-phone" type="tel" name="phone"></div>
+        <div class="field"><label for="f-type">Nature of enquiry *</label>
           <select id="f-type" name="enquiry_type" required>
             <option value="" disabled selected>Select</option>
             <option>Personal order</option>
@@ -376,24 +376,23 @@
         </div>
       </div>
 
-      <div class="fieldrow">
-        <div class="field"><label for="f-company" id="companyLabel">Company</label><input id="f-company" type="text" name="company"></div>
-        <div class="field"><label for="f-region">Region *</label>
-          <select id="f-region" name="region" required>
-            <option value="" disabled selected>Select</option>
-            <option>Dubai</option>
-            <option>Abu Dhabi</option>
-            <option>Sharjah</option>
-            <option>Other Emirate</option>
-            <option>Outside UAE</option>
-            <option>Other</option>
-          </select>
-        </div>
+      <div class="field hidden" id="companyField"><label for="f-company">Company or venue *</label><input id="f-company" type="text" name="company"></div>
+
+      <div class="field"><label for="f-region">Emirate or region *</label>
+        <select id="f-region" name="region" required>
+          <option value="" disabled selected>Select</option>
+          <option>Dubai</option>
+          <option>Abu Dhabi</option>
+          <option>Sharjah</option>
+          <option>Other Emirate</option>
+          <option>Outside UAE</option>
+          <option>Other</option>
+        </select>
       </div>
 
-      <div class="field hidden" id="regionOtherField"><label for="f-region-detail">Please specify *</label><input id="f-region-detail" type="text" name="region_detail"></div>
+      <div class="field hidden" id="regionOtherField"><label for="f-region-detail">Where are you based? *</label><input id="f-region-detail" type="text" name="region_detail"></div>
 
-      <div class="field"><label for="f-message">Message *</label><textarea id="f-message" name="message" required></textarea></div>
+      <div class="field"><label for="f-message">Your message *</label><textarea id="f-message" name="message" required></textarea></div>
 
       <button type="submit" class="btn-primary" id="submitBtn">Send enquiry</button>
       <div class="form-status" id="formStatus" role="status" aria-live="polite"></div>
@@ -441,7 +440,7 @@
   var form=document.getElementById('enquiryForm');
   var typeSel=document.getElementById('f-type');
   var companyInput=document.getElementById('f-company');
-  var companyLabel=document.getElementById('companyLabel');
+  var companyField=document.getElementById('companyField');
   var regionSel=document.getElementById('f-region');
   var regionOtherField=document.getElementById('regionOtherField');
   var regionOtherInput=document.getElementById('f-region-detail');
@@ -452,8 +451,9 @@
 
   function syncCompany(){
     var trade=(typeSel.value==='Trade & hospitality');
+    companyField.classList.toggle('hidden',!trade);
     companyInput.required=trade;
-    companyLabel.textContent=trade?'Company *':'Company';
+    if(!trade) companyInput.value='';
   }
   function syncRegion(){
     var needs=(regionSel.value==='Other Emirate'||regionSel.value==='Other');
