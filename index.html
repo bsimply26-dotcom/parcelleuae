@@ -145,7 +145,7 @@
   /* enquiry form */
   .contact{background:var(--sand);}
   .enquiry-form{max-width:680px;margin:0 auto;}
-  .enquiry-form .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;}
+  .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0;}
   .fieldrow{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;}
   .field{display:flex;flex-direction:column;gap:7px;margin-bottom:18px;}
   .fieldrow .field{margin-bottom:0;}
@@ -340,11 +340,15 @@
     <img class="emblem" src="emblem.png" alt="Parcelle emblem" width="108">
   </div>
   <div class="exp-copy reveal"><h2>The Parcelle Experience</h2><p>More than coffee.<br>A connection between soil and soul.</p></div>
-  <div class="exp-form reveal">
-    <div class="field"><input type="email" placeholder="Enter your email" aria-label="Email address"><button type="button">Join</button></div>
-    <div class="cap">Join for early access and the occasional word from Parcelle.</div>
+  <form class="exp-form reveal" id="newsletterForm">
+    <input type="hidden" name="access_key" value="52ebb3cd-d00b-4bed-b6f8-d0ee4196cef6">
+    <input type="hidden" name="subject" value="Newsletter signup - parcelleuae.com">
+    <input type="hidden" name="from_name" value="Parcelle Newsletter">
+    <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div class="field"><input type="email" name="email" placeholder="Enter your email" aria-label="Email address" required><button type="submit">Join</button></div>
+    <div class="cap" id="newsletterStatus">Join for early access and the occasional word from Parcelle.</div>
     <a class="btn-outline-light" href="#contact" data-type="Trade & hospitality">For trade, request a tasting <span class="arrow">&rarr;</span></a>
-  </div>
+  </form>
 </section>
 
 <section class="contact" id="contact">
@@ -505,6 +509,28 @@
       })
       .finally(function(){ submitBtn.disabled=false; submitBtn.textContent='Send enquiry'; });
   });
+
+  // ---- newsletter ----
+  var nlForm=document.getElementById('newsletterForm');
+  var nlStatus=document.getElementById('newsletterStatus');
+  if(nlForm){
+    nlForm.addEventListener('submit',function(ev){
+      ev.preventDefault();
+      if(!nlForm.checkValidity()){ nlForm.reportValidity(); return; }
+      var nlBtn=nlForm.querySelector('button');
+      var nlKey=nlForm.querySelector('[name=access_key]').value;
+      if(nlKey.indexOf('YOUR_')===0){ nlStatus.textContent='Sign-up goes live once the access key is added.'; return; }
+      nlBtn.disabled=true; nlBtn.textContent='...';
+      fetch('https://api.web3forms.com/submit',{method:'POST',body:new FormData(nlForm)})
+        .then(function(r){return r.json();})
+        .then(function(d){
+          if(d.success){ nlStatus.textContent='You are on the list. Welcome to Parcelle.'; nlForm.reset(); }
+          else { nlStatus.textContent='Something went wrong. Please try again.'; }
+        })
+        .catch(function(){ nlStatus.textContent='Something went wrong. Please try again.'; })
+        .finally(function(){ nlBtn.disabled=false; nlBtn.textContent='Join'; });
+    });
+  }
 
   var io=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.14});
   document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
