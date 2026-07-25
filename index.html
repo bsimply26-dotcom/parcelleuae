@@ -446,7 +446,7 @@
   var regionOtherInput=document.getElementById('f-region-detail');
   var regionOtherLabel=regionOtherField.querySelector('label');
   var msgInput=document.getElementById('f-message');
-  var status=document.getElementById('formStatus');
+  var statusEl=document.getElementById('formStatus');
   var submitBtn=document.getElementById('submitBtn');
 
   function syncCompany(){
@@ -475,12 +475,12 @@
 
   form.addEventListener('submit',function(ev){
     ev.preventDefault();
-    status.className='form-status';status.textContent='';
+    statusEl.className='form-status';statusEl.textContent='';
     if(!form.checkValidity()){ form.reportValidity(); return; }
     var key=form.querySelector('[name=access_key]').value;
     if(key.indexOf('YOUR_')===0){
-      status.className='form-status err';
-      status.textContent='This form goes live once the Web3Forms access key is added.';
+      statusEl.className='form-status err';
+      statusEl.textContent='This form goes live once the Web3Forms access key is added.';
       return;
     }
     submitBtn.disabled=true; submitBtn.textContent='Sending...';
@@ -488,17 +488,18 @@
       .then(function(r){return r.json();})
       .then(function(d){
         if(d.success){
-          status.className='form-status ok';
-          status.textContent='Thank you. Your enquiry has reached us. We will reply personally.';
+          statusEl.className='form-status ok';
+          statusEl.textContent='Thank you. Your enquiry has reached us. We will reply personally.';
+          statusEl.scrollIntoView({behavior:'smooth',block:'center'});
           form.reset(); syncCompany(); syncRegion();
         } else {
-          status.className='form-status err';
-          status.textContent='Something went wrong. Please email hello@parcelleuae.com directly.';
+          statusEl.className='form-status err';
+          statusEl.textContent='Something went wrong. Please email hello@parcelleuae.com directly.';
         }
       })
       .catch(function(){
-        status.className='form-status err';
-        status.textContent='Something went wrong. Please email hello@parcelleuae.com directly.';
+        statusEl.className='form-status err';
+        statusEl.textContent='Something went wrong. Please email hello@parcelleuae.com directly.';
       })
       .finally(function(){ submitBtn.disabled=false; submitBtn.textContent='Send enquiry'; });
   });
