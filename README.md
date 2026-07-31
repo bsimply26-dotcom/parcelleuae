@@ -3,7 +3,7 @@
 Static single-page site. Every file lives at the top level (root), including the images. Nothing is in a subfolder, so nothing can be flattened by mistake.
 
 ## Publish on GitHub Pages
-1. Create a new **public** repository (e.g. `parcelle-site`).
+1. Create a new **public** repository (e.g. `parcelle-site`). 
 2. Drag **all** of these files into the upload box together: `index.html`, `CNAME`, `404.html`, `README.md`, `.nojekyll`, and every `.jpg` / `.png`. They all belong at the root.
 3. Commit.
 4. **Settings > Pages** -> Source: *Deploy from a branch*, Branch: *main*, Folder: */ (root)*. Save.
