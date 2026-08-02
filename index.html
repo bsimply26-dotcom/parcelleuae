@@ -129,7 +129,7 @@
   .editions-more p{font-size:15px;line-height:1.85;color:var(--mist);margin-bottom:22px;}
   @media(max-width:900px){
     .cru-feature{grid-template-columns:1fr;}
-    .cru-photo{min-height:300px;order:-1;}
+    .cru-photo{aspect-ratio:1/1;min-height:0;order:-1;}
     .cru-copy{padding:clamp(28px,6vw,40px);}
     .coffee-grid{grid-template-columns:1fr;max-width:400px;}
   }
@@ -259,7 +259,7 @@
     .carousel-dots button{width:7px;height:7px;border-radius:50%;border:none;padding:0;background:var(--mist);cursor:pointer;transition:background .25s,transform .25s;}
     .carousel-dots button.active{background:var(--forest);transform:scale(1.3);}
     .drip-feature{grid-template-columns:1fr;margin-top:36px;}
-    .drip-photo{min-height:300px;order:-1;}
+    .drip-photo{aspect-ratio:1/1;min-height:0;order:-1;}
     .drip-copy{padding:28px;}
     .drip-copy p{max-width:none;}
   }
