@@ -645,18 +645,19 @@
   if(!track||!dotsWrap)return;
   var cards=Array.prototype.slice.call(track.querySelectorAll('.blend-card'));
   var mq=window.matchMedia('(max-width:760px)');
-  var timer=null,idx=0,st;
+  var timer=null,idx=0,st,visible=true;
   cards.forEach(function(c,i){var b=document.createElement('button');b.setAttribute('aria-label','Go to coffee '+(i+1));b.addEventListener('click',function(){goTo(i,true);});dotsWrap.appendChild(b);});
   var dots=Array.prototype.slice.call(dotsWrap.querySelectorAll('button'));
   function setActive(i){dots.forEach(function(d,j){d.classList.toggle('active',j===i);});}
-  function goTo(i,user){idx=(i+cards.length)%cards.length;cards[idx].scrollIntoView({behavior:'smooth',inline:'center',block:'nearest'});setActive(idx);if(user)restart();}
+  function goTo(i,user){idx=(i+cards.length)%cards.length;track.scrollTo({left:cards[idx].offsetLeft-cards[0].offsetLeft,behavior:'smooth'});setActive(idx);if(user)restart();}
   function next(){goTo(idx+1,false);}
-  function start(){if(mq.matches){stop();timer=setInterval(next,4500);}}
+  function start(){if(mq.matches&&visible){stop();timer=setInterval(next,4500);}}
   function stop(){if(timer){clearInterval(timer);timer=null;}}
   function restart(){stop();if(mq.matches){setTimeout(start,6000);}}
   track.addEventListener('scroll',function(){clearTimeout(st);st=setTimeout(function(){var c=track.scrollLeft+track.clientWidth/2,best=0,bd=1e9;cards.forEach(function(card,i){var ctr=card.offsetLeft+card.clientWidth/2,d=Math.abs(ctr-c);if(d<bd){bd=d;best=i;}});idx=best;setActive(idx);},90);},{passive:true});
   track.addEventListener('touchstart',stop,{passive:true});
   track.addEventListener('touchend',restart,{passive:true});
+  if('IntersectionObserver' in window){new IntersectionObserver(function(en){visible=en[0].isIntersecting;if(visible){start();}else{stop();}},{threshold:0.35}).observe(track);}
   setActive(0);start();
   if(mq.addEventListener){mq.addEventListener('change',function(){stop();start();});}else if(mq.addListener){mq.addListener(function(){stop();start();});}
 })();
