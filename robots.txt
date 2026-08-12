@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://parcelleuae.com/sitemap.xml
